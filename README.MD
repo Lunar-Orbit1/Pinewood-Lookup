@@ -9,7 +9,8 @@ REQUIREMENTS:
 2. Open up the Node.js terminal, and type the following into it, pressing enter after each line
     1. `npm i noblox.js` <br>
     2. `npm i colors` <br>
-3. Copy your `.ROBLOSECURITYTOKEN` (If you do not know how to find it, click [here](https://youtu.be/hd6xWydE1K0))
+3. Copy your `.ROBLOSECURITYTOKEN` (Do not copy the warning, If you do not know how to find it, click [here](https://youtu.be/hd6xWydE1K0))
+    1. (Copy everything after the `.|_`)
 4. Open the `setup.bat` file in the `/SETUP/` folder
 5. When it asks you, paste the token you copied into the prompt
 6. Press enter. You are now all good
