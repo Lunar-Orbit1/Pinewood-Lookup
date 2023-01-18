@@ -57,21 +57,7 @@ async function getgroupdata(user){
 
 
 async function startApp () {
-    //Read config.json, assign token
-    console.log("Reading JSON".grey)
-    try {
-        const jsonString = fs.readFileSync("./JAVASCRIPT/config.json");
-        token = JSON.parse(jsonString);
-      } catch (err) {
-        console.log(err.red);
-        return;
-      }
-    console.log("Successfully read JSON".grey)
-    console.log("Logging in..".grey)
-    const currentUser = await noblox.setCookie(token['token']) 
-    console.log(`Logged in as ${currentUser.UserName} [${currentUser.UserID}]`.grey)
     var args = process.argv.slice(2);
-    
     console.log(`Searching for ${args[0]}..`.grey)
     try{
         
