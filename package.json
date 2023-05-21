@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "colors": "^1.4.0",
+    "noblox.js": "^4.14.1"
+  }
+}
