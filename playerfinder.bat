@@ -1,5 +1,5 @@
 @echo off
+call npm install --silent
 set /p "id=Enter Roblox USERNAME: "
-npm install
 node ./JAVASCRIPT/main.js %id%
 pause
