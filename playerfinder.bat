@@ -1,5 +1,8 @@
 @echo off
 call npm install --silent
+
+:startup
 set /p "id=Enter Roblox USERNAME: "
-node ./JAVASCRIPT/main.js %id%
-pause
+call npm run start %id%
+goto startup
+```
