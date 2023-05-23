@@ -1,7 +1,8 @@
 const noblox = require('noblox.js')
-var colors = require('colors');
+const colors = require('colors');
 const fs = require("fs");
-var token //Assign after reading the JSON
+const axios = require('axios');
+let token //Assign after reading the JSON
 
 function printGroup(text, rank){
     if (rank !== "Guest"){
@@ -11,53 +12,62 @@ function printGroup(text, rank){
     }
 }
 
+const getRank = async function (group, user) {
+	const rank = user.find(x => x.group.id === group)
+	if (!rank) return 'Guest'
+	return rank.role.name
+}
+
 async function getgroupdata(user){
     console.log("========================================================")
     console.log("A 'Guest' rank means they are not in the group".red)
     console.log("This could take a few seconds due to rate limits".italic.grey)
 
+	let userRanks = await axios.get(`https://groups.roblox.com/v2/users/${user}/groups/roles`)
+	userRanks = userRanks.data.data
+
     //Get the ranks. There is a better way but I am lazy and don't care enough
     //Control c + Control V my beloved
     //Pinewood
-    var rankName = await noblox.getRankNameInGroup(159511, user)
+	let rankName = await getRank(159511, userRanks)
     printGroup(`Pinewood: ${rankName}`, rankName)
 
     //Pbst
-    rankName = await noblox.getRankNameInGroup(645836, user)
+    rankName = await getRank(645836, userRanks)
     printGroup(`PBST: ${rankName}`, rankName)
 
     //Tms
-    rankName = await noblox.getRankNameInGroup(4890641, user)
+    rankName = await getRank(4890641, userRanks)
     printGroup(`TMS: ${rankName}`, rankName)
 
     //Pet
-    rankName = await noblox.getRankNameInGroup(2593707, user)
+    rankName = await getRank(2593707, userRanks)
     printGroup(`PET: ${rankName}`, rankName)
 
     //PBQA
-    rankName = await noblox.getRankNameInGroup(4543796, user)
+	rankName = await getRank(4543796, userRanks)
     printGroup(`PBQA: ${rankName}`, rankName)
 
     //PBM
-    rankName = await noblox.getRankNameInGroup(4032816, user)
+	rankName = await getRank(4032816, userRanks)
     printGroup(`PBM: ${rankName}`, rankName)
 
     //Xylem
-    rankName = await noblox.getRankNameInGroup(1179443, user)
+	rankName = await getRank(1179443, userRanks)
     printGroup(`XYLEM: ${rankName}`, rankName)
 
     //PIA
-    rankName = await noblox.getRankNameInGroup(670202, user)
+	rankName = await getRank(670202, userRanks)
     printGroup(`PIA: ${rankName}`, rankName)
 
     //PBV
-    rankName = await noblox.getRankNameInGroup(240214, user)
+	rankName = await getRank(240214, userRanks)
     printGroup(`PBV: ${rankName}`, rankName)
 }
 
 
 async function startApp () {
-    var args = process.argv.slice(2);
+    const args = process.argv.slice(2);
     console.log(`Searching for ${args[0]}..`.grey)
     try{
         
