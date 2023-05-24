@@ -22,8 +22,13 @@ async function getgroupdata(user){
     console.log("========================================================")
     console.log("A 'Guest' rank means they are not in the group".red)
     console.log("This could take a few seconds due to rate limits".italic.grey)
-
-	let userRanks = await axios.get(`https://groups.roblox.com/v2/users/${user}/groups/roles`)
+	let userRanks;
+	try {
+		userRanks = await axios.get(`https://groups.roblox.com/v2/users/${user}/groups/roles`)
+	} catch (err) {
+		console.log(`ROBLOX: ${err}`.bold.brightRed)
+		return
+	}
 	userRanks = userRanks.data.data
 
     //Get the ranks. There is a better way but I am lazy and don't care enough
@@ -72,6 +77,10 @@ async function startApp () {
     try{
         
         let user= await noblox.getIdFromUsername(args[0])
+		if (!user) {
+			console.log(`User ${args[0]} not found.`.red)
+			return
+		}
         console.log(`User ${user} found, \nProfile: https://www.roblox.com/users/${user}/profile`.green)
         getgroupdata(user)
     } catch(err){
