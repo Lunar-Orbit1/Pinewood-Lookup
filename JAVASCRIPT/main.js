@@ -2,14 +2,15 @@ const noblox = require('noblox.js')
 const colors = require('colors');
 const fs = require("fs");
 const axios = require('axios');
-let token //Assign after reading the JSON
 
-function printGroup(text, rank){
-    if (rank !== "Guest"){
-        console.log(text.green)
-    } else {
-        console.log(text.red)
-    }
+const ranks = {}
+
+function printGroup(text, rank) {
+	if (rank !== "Guest") {
+		console.log(text.green)
+	} else {
+		console.log(text.red)
+	}
 }
 
 const getRank = async function (group, user) {
@@ -18,10 +19,9 @@ const getRank = async function (group, user) {
 	return rank.role.name
 }
 
-async function getgroupdata(user){
-    console.log("========================================================")
-    console.log("A 'Guest' rank means they are not in the group".red)
-    console.log("This could take a few seconds due to rate limits".italic.grey)
+async function getgroupdata(user, player) {
+	console.log("========================================================")
+	console.log("A 'Guest' rank means they are not in the group".red)
 	let userRanks;
 	try {
 		userRanks = await axios.get(`https://groups.roblox.com/v2/users/${user}/groups/roles`)
@@ -31,60 +31,67 @@ async function getgroupdata(user){
 	}
 	userRanks = userRanks.data.data
 
-    //Get the ranks. There is a better way but I am lazy and don't care enough
-    //Control c + Control V my beloved
-    //Pinewood
-	let rankName = await getRank(159511, userRanks)
-    printGroup(`Pinewood: ${rankName}`, rankName)
+	//Get the ranks. There is a better way but I am lazy and don't care enough\
+	// I cared enough to do it the better way
+	//Control c + Control V my beloved
+	//Pinewood
+	ranks.pb = await getRank(159511, userRanks)
+	printGroup(`Pinewood: ${ranks.pb}`, ranks.pb)
 
-    //Pbst
-    rankName = await getRank(645836, userRanks)
-    printGroup(`PBST: ${rankName}`, rankName)
+	//Pbst
+	ranks.pbst = await getRank(645836, userRanks)
+	printGroup(`PBST: ${ranks.pbst}`, ranks.pbst)
 
-    //Tms
-    rankName = await getRank(4890641, userRanks)
-    printGroup(`TMS: ${rankName}`, rankName)
+	//Tms
+	ranks.tms = await getRank(4890641, userRanks)
+	printGroup(`TMS: ${ranks.tms}`, ranks.tms)
+	//Pet
+	ranks.pet = await getRank(2593707, userRanks)
+	printGroup(`PET: ${ranks.pet}`, ranks.pet)
 
-    //Pet
-    rankName = await getRank(2593707, userRanks)
-    printGroup(`PET: ${rankName}`, rankName)
+	//PBQA
+	ranks.pbqa = await getRank(4543796, userRanks)
+	printGroup(`PBQA: ${ranks.pbqa}`, ranks.pbqa)
 
-    //PBQA
-	rankName = await getRank(4543796, userRanks)
-    printGroup(`PBQA: ${rankName}`, rankName)
+	//PBM
+	ranks.pbm = await getRank(4032816, userRanks)
+	printGroup(`PBM: ${ranks.pbm}`, ranks.pbm)
 
-    //PBM
-	rankName = await getRank(4032816, userRanks)
-    printGroup(`PBM: ${rankName}`, rankName)
+	//Xylem
+	ranks.xylem = await getRank(1179443, userRanks)
+	printGroup(`XYLEM: ${ranks.xylem}`, ranks.xylem)
 
-    //Xylem
-	rankName = await getRank(1179443, userRanks)
-    printGroup(`XYLEM: ${rankName}`, rankName)
+	//PIA
+	ranks.pia = await getRank(670202, userRanks)
+	printGroup(`PIA: ${ranks.pia}`, ranks.pia)
 
-    //PIA
-	rankName = await getRank(670202, userRanks)
-    printGroup(`PIA: ${rankName}`, rankName)
+	//PBV
+	ranks.pbv = await getRank(240214, userRanks)
+	printGroup(`PBV: ${ranks.pbv}`, ranks.pbv)
+	console.log("========================================================")
 
-    //PBV
-	rankName = await getRank(240214, userRanks)
-    printGroup(`PBV: ${rankName}`, rankName)
+	fs.writeFileSync(`./exports/${player}.json`, JSON.stringify(ranks, null, 2))
 }
 
 
-async function startApp () {
-    const args = process.argv.slice(2);
-    console.log(`Searching for ${args[0]}..`.grey)
-    try{
-        
-        let user= await noblox.getIdFromUsername(args[0])
-		if (!user) {
-			console.log(`User ${args[0]} not found.`.red)
-			return
+async function startApp() {
+	const args = process.argv.slice(2);
+	for (const player of args) {
+		console.log(`Searching for ${player}..`.grey)
+		try {
+
+			let user = await noblox.getIdFromUsername(player)
+			if (!user) {
+				console.log(`User ${player} not found.`.red)
+				return
+			}
+			console.log(`User ${user} found, \nProfile: https://www.roblox.com/users/${user}/profile`.green)
+			await getgroupdata(user, player)
+		} catch (err) {
+			console.log(`NOBLOX: ${err}`.bold.brightRed)
 		}
-        console.log(`User ${user} found, \nProfile: https://www.roblox.com/users/${user}/profile`.green)
-        getgroupdata(user)
-    } catch(err){
-        console.log(`NOBLOX: ${err}`.bold.brightRed)
-    }
+	}
+	const directory = process.cwd() + `\\exports`
+	console.log(`Done! You can find an export of the data in ${directory} `.green)
 }
 startApp()
